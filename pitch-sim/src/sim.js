@@ -64,6 +64,28 @@ function pickLocation(outcome, pitchType) {
 }
 
 // -------------------- Resolve Pitch --------------------
+// Helper: map rating → realistic MLB velo
+function mapVelocity(rating, pitchType) {
+  let base;
+
+  if (["fastball", "four-seam", "sinker", "cutter"].includes(pitchType)) {
+    base = 85 + (rating / 100) * 17; // 85–102 mph
+  } else if (pitchType === "slider") {
+    base = 78 + (rating / 100) * 12; // 78–90 mph
+  } else if (pitchType === "curveball") {
+    base = 72 + (rating / 100) * 10; // 72–82 mph
+  } else if (pitchType === "changeup" || pitchType === "splitter") {
+    base = 75 + (rating / 100) * 12; // 75–87 mph
+  } else if (pitchType === "knuckleball") {
+    base = 60 + (rating / 100) * 10; // 60–70 mph
+  } else {
+    base = 80 + (rating / 100) * 15; // fallback
+  }
+
+  // slight randomness
+  return Math.round(base + (Math.random() * 4 - 2));
+}
+
 export function resolvePitch(
   pitcher,
   batter,
@@ -72,10 +94,14 @@ export function resolvePitch(
   pitchCommand,
   lastPitchDetail
 ) {
-  const fatigueFactor = Math.max(0, 1 - pitchNumber / (pitcher.stamina * 1.5));
+  const fatigueFactor = Math.max(0.7, 1 - pitchNumber / (pitcher.stamina * 1.5));
   const adjControl =
     (pitcher.control + (pitcher.controlBoost || 0)) * fatigueFactor;
-  const adjVelocity = pitcher.velocity * fatigueFactor;
+
+  // ✅ Use real MLB velo mapping
+  const { pitchType } = parsePitchCommand(pitchCommand);
+  const rawVelocity = mapVelocity(pitcher.velocity, pitchType);
+  const pitchVelo = Math.round(rawVelocity * fatigueFactor);
 
   let probs = { strike: 0.35, ball: 0.3, foul: 0.15, contact: 0.2 };
 
@@ -91,7 +117,7 @@ export function resolvePitch(
 
   // Pitcher effects
   probs.strike += (adjControl - 50) / 400;
-  probs.contact -= (adjVelocity - 50) / 400;
+  probs.contact -= (pitcher.velocity - 50) / 400;
 
   // Normalize
   let total = Object.values(probs).reduce((a, b) => a + b, 0);
@@ -104,10 +130,9 @@ export function resolvePitch(
   else if (roll < probs.strike + probs.ball + probs.foul) outcome = "Foul";
   else outcome = "InPlay";
 
-  const { pitchType } = parsePitchCommand(pitchCommand);
   let location = pickLocation(outcome, pitchType);
 
-  // Hot/Cold Zone Influence (only inside strike zone)
+  // Hot/Cold Zone Influence
   if (location.row >= 1 && location.row <= 3 && location.col >= 1 && location.col <= 3) {
     const zoneRow = location.row - 1;
     const zoneCol = location.col - 1;
@@ -121,15 +146,14 @@ export function resolvePitch(
     }
   }
 
-  // Velocity flavor
-  const velo = Math.round(adjVelocity + (Math.random() * 4 - 2));
+  // Detail string w/ MLB-style velo
   let detail = "";
-  if (outcome === "Strike") detail = `${pitchType} ${velo}mph — strike!`;
-  else if (outcome === "Ball") detail = `${pitchType} misses at ${velo}mph`;
-  else if (outcome === "Foul") detail = `${pitchType} at ${velo}mph fouled off`;
-  else detail = `${pitchType} at ${velo}mph put in play`;
+  if (outcome === "Strike") detail = `${pitchType} at ${pitchVelo} mph — strike!`;
+  else if (outcome === "Ball") detail = `${pitchType} misses at ${pitchVelo} mph`;
+  else if (outcome === "Foul") detail = `${pitchType} at ${pitchVelo} mph fouled off`;
+  else detail = `${pitchType} at ${pitchVelo} mph put in play`;
 
-  return { outcome, detail, location };
+  return { outcome, detail, location, velocity: pitchVelo };
 }
 
 // -------------------- Resolve Contact --------------------

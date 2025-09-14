@@ -6,9 +6,11 @@ import Pitcher from "./Pitcher";
 function Manager({ activePitcher, setActivePitcher, lineup, setLineup }) {
   const [newPitcherName, setNewPitcherName] = useState("");
   const [role, setRole] = useState("Starter");
-  const [velocity, setVelocity] = useState(70);
-  const [control, setControl] = useState(70);
-  const [stamina, setStamina] = useState(80);
+
+  // store as strings so user can type freely
+  const [velocity, setVelocity] = useState("70");
+  const [control, setControl] = useState("70");
+  const [stamina, setStamina] = useState("80");
   const [repertoire, setRepertoire] = useState([]);
 
   const repertoireOptions = [
@@ -31,14 +33,27 @@ function Manager({ activePitcher, setActivePitcher, lineup, setLineup }) {
     );
   };
 
+  // clamp helper
+  const clamp = (value, [min, max]) =>
+    Math.min(Math.max(parseInt(value) || min, min), max);
+
   const createPitcher = () => {
-    if (!newPitcherName || repertoire.length === 0) return;
+    if (!newPitcherName || repertoire.length === 0) {
+      alert("Enter a name and select at least one pitch!");
+      return;
+    }
+
+    // apply caps depending on role
+    const caps =
+      role === "Starter"
+        ? { velocity: [65, 100], control: [50, 95], stamina: [60, 100] }
+        : { velocity: [65, 100], control: [50, 85], stamina: [30, 60] };
 
     const newP = new Pitcher(
       newPitcherName,
-      velocity,
-      control,
-      stamina,
+      clamp(velocity, caps.velocity),
+      clamp(control, caps.control),
+      clamp(stamina, caps.stamina),
       repertoire
     );
 
@@ -48,10 +63,11 @@ function Manager({ activePitcher, setActivePitcher, lineup, setLineup }) {
       bullpen.push(newP);
     }
 
+    // reset fields
     setNewPitcherName("");
-    setVelocity(70);
-    setControl(70);
-    setStamina(80);
+    setVelocity("70");
+    setControl("70");
+    setStamina("80");
     setRepertoire([]);
   };
 
@@ -64,45 +80,56 @@ function Manager({ activePitcher, setActivePitcher, lineup, setLineup }) {
         <h3>Current Pitcher</h3>
         {activePitcher ? (
           <div className="pitcher-card">
-            <span>
-              <strong>{activePitcher.name}</strong> | Vel {activePitcher.velocity}, Ctrl{" "}
-              {activePitcher.control}, Sta {activePitcher.stamina}
-              <br />
-              Pitches: {activePitcher.repertoire.join(", ")}
-            </span>
+            <strong>{activePitcher.name}</strong> | Vel {activePitcher.velocity}, Ctrl{" "}
+            {activePitcher.control}, Sta {activePitcher.stamina}
+            <br />
+            Pitches: {activePitcher.repertoire.join(", ")}
           </div>
         ) : (
           <p>No active pitcher selected</p>
         )}
       </div>
 
+      {/* --- Rotation --- */}
+      <div className="manager-section">
+        <h3>Rotation</h3>
+        {rotation.length > 0 ? (
+          rotation.map((p, i) => (
+            <div key={i} className="pitcher-card">
+              <strong>{p.name}</strong> (Vel {p.velocity}, Ctrl {p.control}, Sta{" "}
+              {p.stamina}) | Pitches: {p.repertoire.join(", ")}
+              <button onClick={() => setActivePitcher(p)}>Put In</button>
+            </div>
+          ))
+        ) : (
+          <p>No starters yet</p>
+        )}
+      </div>
+
       {/* --- Bullpen --- */}
       <div className="manager-section">
         <h3>Bullpen</h3>
-        {bullpen.map((p, i) => (
-          <div className="pitcher-card" key={i}>
-            <span>
+        {bullpen.length > 0 ? (
+          bullpen.map((p, i) => (
+            <div key={i} className="pitcher-card">
               <strong>{p.name}</strong> (Vel {p.velocity}, Ctrl {p.control}, Sta{" "}
               {p.stamina}) | Pitches: {p.repertoire.join(", ")}
-            </span>
-            <button onClick={() => setActivePitcher(p)}>Put In</button>
-          </div>
-        ))}
+              <button onClick={() => setActivePitcher(p)}>Put In</button>
+            </div>
+          ))
+        ) : (
+          <p>No bullpen arms yet</p>
+        )}
       </div>
 
       {/* --- Lineup --- */}
       <div className="manager-section">
         <h3>Lineup</h3>
-        <div className="lineup-list">
-          {lineup.map((b, i) => (
-            <div className="lineup-item" key={i}>
-              <span>
-                #{i + 1} {b.name}
-              </span>
-              <span>(Con {b.contact}, Pow {b.power})</span>
-            </div>
-          ))}
-        </div>
+        {lineup.map((b, i) => (
+          <div className="lineup-item" key={i}>
+            #{i + 1} {b.name} (Con {b.contact}, Pow {b.power})
+          </div>
+        ))}
       </div>
 
       {/* --- Build a New Pitcher --- */}
@@ -125,29 +152,23 @@ function Manager({ activePitcher, setActivePitcher, lineup, setLineup }) {
 
         <label>Velocity</label>
         <input
-          type="number"
+          type="text"
           value={velocity}
-          onChange={(e) => setVelocity(Number(e.target.value))}
-          min="65"
-          max="100"
+          onChange={(e) => setVelocity(e.target.value)}
         />
 
         <label>Control</label>
         <input
-          type="number"
+          type="text"
           value={control}
-          onChange={(e) => setControl(Number(e.target.value))}
-          min="50"
-          max="95"
+          onChange={(e) => setControl(e.target.value)}
         />
 
         <label>Stamina</label>
         <input
-          type="number"
+          type="text"
           value={stamina}
-          onChange={(e) => setStamina(Number(e.target.value))}
-          min="40"
-          max="100"
+          onChange={(e) => setStamina(e.target.value)}
         />
 
         <label>Repertoire</label>

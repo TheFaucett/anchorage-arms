@@ -1,0 +1,133 @@
+/* --- Bullpen Section --- */
+.manager-section h3 {
+  margin-bottom: 10px;
+}
+
+.bullpen-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pitcher-card {
+  background: #1e1e1e;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.pitcher-card strong {
+  color: #4cafef;
+}
+
+.pitcher-card button {
+  align-self: flex-end;
+  margin-top: 8px;
+  padding: 6px 12px;
+  font-size: 14px;
+  border: none;
+  border-radius: 5px;
+  background: #43a047;
+  color: white;
+  cursor: pointer;
+}
+.pitcher-card button:hover {
+  background: #388e3c;
+}
+
+/* --- Create Pitcher Form --- */
+.create-pitcher-form {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 10px;
+  padding: 15px;
+  margin-top: 25px;
+}
+
+.create-pitcher-form h4 {
+  text-align: center;
+  margin-bottom: 15px;
+  color: #f5f5f5;
+}
+
+.create-pitcher-form label {
+  display: block;
+  margin-top: 10px;
+  font-size: 14px;
+  color: #ddd;
+}
+
+.create-pitcher-form input[type="text"],
+.create-pitcher-form input[type="number"],
+.create-pitcher-form select {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  border-radius: 6px;
+  border: 1px solid #555;
+  background: #2a2a2a;
+  color: #f5f5f5;
+  font-size: 14px;
+}
+
+.create-pitcher-form input:focus,
+.create-pitcher-form select:focus {
+  border-color: #4caf50;
+  outline: none;
+}
+
+/* Grid layout for checkboxes */
+.repertoire-options {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.repertoire-options label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+}
+
+.create-pitcher-form button {
+  width: 100%;
+  margin-top: 15px;
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  background: #e53935;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.create-pitcher-form button:hover {
+  background: #c62828;
+}
+
+/* --- Mobile tweaks --- */
+@media (max-width: 600px) {
+  .pitcher-card {
+    font-size: 13px;
+    padding: 10px;
+  }
+
+  .create-pitcher-form {
+    padding: 12px;
+  }
+
+  .repertoire-options {
+    grid-template-columns: 1fr; /* stack on small screens */
+  }
+
+  .create-pitcher-form button {
+    font-size: 14px;
+    padding: 8px;
+  }
+}
