@@ -1,0 +1,220 @@
+/* Global */
+.app-container {
+  background: #121212;
+  color: white;
+  font-family: "Segoe UI", sans-serif;
+  min-height: 100vh;
+  padding: 20px;
+  text-align: center;
+}
+
+.title {
+  margin-bottom: 15px;
+  font-size: 32px;
+}
+
+/* Menu Bar */
+.menu-bar {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.menu-button {
+  background: #1f1f1f;
+  border: 1px solid #333;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  color: white;
+  font-weight: bold;
+}
+.menu-button.active {
+  background: #1db954;
+  border-color: #1db954;
+}
+.menu-button.new-game {
+  background: #e50914;
+  border-color: #e50914;
+}
+.menu-button:hover {
+  opacity: 0.8;
+}
+
+/* Scoreboard */
+.game-info h2 {
+  margin-bottom: 5px;
+}
+.score-line {
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+/* Count Display */
+.count-box {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.count-circle {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #222;
+  border: 1px solid #555;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: #555;
+}
+.count-ball {
+  background: #1db954;
+  color: white;
+}
+.count-strike {
+  background: #e50914;
+  color: white;
+}
+.count-out {
+  background: #f5c518;
+  color: black;
+}
+
+/* Bases Display */
+.bases {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.bases-row {
+  display: flex;
+  justify-content: space-between;
+  width: 120px;
+}
+.base {
+  width: 40px;
+  height: 40px;
+  border: 2px solid #888;
+  background: #222;
+  transform: rotate(45deg);
+}
+.base.occupied {
+  background: #1db954;
+}
+
+/* Pitch Input */
+.pitch-input {
+  margin-top: 15px;
+}
+.pitch-input input {
+  padding: 8px;
+  border-radius: 6px;
+  border: none;
+  width: 250px;
+}
+.call-button {
+  margin-left: 10px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  background: #1db954;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+.call-button:hover {
+  background: #14833b;
+}
+
+/* Log Box */
+.log-box {
+  margin-top: 20px;
+  padding: 12px;
+  background: #1f1f1f;
+  border-radius: 6px;
+  text-align: left;
+}
+/* BuildPitcher styles */
+.pitcher-form {
+  margin-top: 20px;
+  background: #1f1f1f;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 520px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: left;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.35);
+}
+
+.pitcher-form h3 {
+  text-align: center;
+  margin-bottom: 14px;
+  color: #1db954;
+}
+
+.pitcher-form label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 14px;
+  color: #ddd;
+}
+
+.pitcher-form input,
+.pitcher-form select {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 12px;
+  border: 1px solid #333;
+  border-radius: 6px;
+  background: #232323;
+  color: #eee;
+}
+
+.pitcher-form input:focus,
+.pitcher-form select:focus {
+  outline: none;
+  border-color: #1db954;
+  box-shadow: 0 0 0 2px rgba(29,185,84,0.25);
+}
+
+.repertoire-group {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.repertoire-option {
+  background: #262626;
+  padding: 8px 10px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid #333;
+  cursor: pointer;
+}
+
+.repertoire-option:hover {
+  background: #2c2c2c;
+}
+
+.repertoire-option input {
+  accent-color: #1db954;
+}
+
+.create-button {
+  width: 100%;
+  padding: 11px;
+  background: #1db954;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.create-button:hover { background: #179347; }
